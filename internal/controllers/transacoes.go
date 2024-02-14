@@ -12,7 +12,9 @@ import (
 func Transacoes(c *fiber.Ctx) error {
 	clienteId, err := c.ParamsInt("id")
 	if err != nil {
-		return c.SendStatus(http.StatusNotFound)
+		return c.Status(http.StatusBadRequest).JSON(&fiber.Map{
+			"erro": "O Cliente ID deve ser um número inteiro.",
+		})
 	}
 
 	// Verifica se o ID é de um cliente existente
