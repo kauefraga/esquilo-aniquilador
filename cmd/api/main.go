@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/gofiber/contrib/swagger"
 	"github.com/gofiber/fiber/v2"
 	"github.com/kauefraga/esquilo-aniquilador/database"
 	"github.com/kauefraga/esquilo-aniquilador/internal/controllers"
@@ -10,8 +9,6 @@ import (
 
 func main() {
 	app := fiber.New()
-
-	app.Use(swagger.New())
 
 	database.Clientes = make(map[int]domain.Cliente)
 	database.Transacoes = make(map[int]domain.Transacao)
