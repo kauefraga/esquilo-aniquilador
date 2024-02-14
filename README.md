@@ -16,7 +16,7 @@ Inicialmente:
 
 - [x] Rota `GET /`, Hello worldzinho 😃
 - [x] Rota `POST /clientes/:id/transacoes` com banco de dados em memória (para testes e validação das regras de negócio)
-- [ ] Rota `GET /clientes/:id/extrato` com banco de dados em memória
+- [x] Rota `GET /clientes/:id/extrato` com banco de dados em memória (só faltou fazer a ordenação decrescente por data/hora)
 
 Posteriormente/atualmente:
 
@@ -83,6 +83,8 @@ Não tunei nada, mal implementei o necessário 🤣.
 
 - [Início](https://twitter.com/rkauefraga/status/1757072132729639271)
 - [Sobre a regra de negócio que retorna 422](https://twitter.com/rkauefraga/status/1757524333629464861)
+- [Sobre o README desse projeto](https://twitter.com/rkauefraga/status/1757606382570782877)
+- [Quando terminei a rota de extrato](https://twitter.com/rkauefraga/status/1757870172969246833)
 
 ## 📝 Licença
 
