@@ -52,7 +52,7 @@ Ainda não testei.
 
 Ainda não escrevi 🤡.
 
-### Testes para verificar o funcionamento durante o desenvolvimento
+### Testes para verificar as regras de negócio (manual mesmo)
 
 Requisitos: [Visual Studio Code](https://code.visualstudio.com).
 
