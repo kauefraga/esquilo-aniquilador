@@ -1,0 +1,82 @@
+GET http://localhost:3000/clientes/1/extrato HTTP/1.1
+
+###
+
+GET http://localhost:3000/clientes/6/extrato HTTP/1.1
+
+###
+
+POST http://localhost:3000/clientes/1/transacoes HTTP/1.1
+Content-Type: application/json
+
+{
+  "valor": 0,
+  "tipo": "c",
+  "descricao": "valor 0"
+}
+
+###
+
+POST http://localhost:3000/clientes/1/transacoes HTTP/1.1
+Content-Type: application/json
+
+{
+  "valor": 10000,
+  "tipo": "e",
+  "descricao": "tipo e???"
+}
+
+###
+
+POST http://localhost:3000/clientes/1/transacoes HTTP/1.1
+Content-Type: application/json
+
+{
+  "valor": 1000,
+  "tipo": "c",
+  "descricao": ""
+}
+
+###
+
+POST http://localhost:3000/clientes/1/transacoes HTTP/1.1
+Content-Type: application/json
+
+{
+  "valor": 1000,
+  "tipo": "c",
+  "descricao": "que descrição gigante é essa mano!?"
+}
+
+###
+
+POST http://localhost:3000/clientes/1/transacoes HTTP/1.1
+Content-Type: application/json
+
+{
+  "valor": 1000,
+  "tipo": "c",
+  "descricao": "credito"
+}
+
+###
+
+POST http://localhost:3000/clientes/1/transacoes HTTP/1.1
+Content-Type: application/json
+
+{
+  "valor": 1000,
+  "tipo": "d",
+  "descricao": "debito"
+}
+
+###
+
+POST http://localhost:3000/clientes/6/transacoes HTTP/1.1
+Content-Type: application/json
+
+{
+  "valor": 1000,
+  "tipo": "c",
+  "descricao": "descricao"
+}
