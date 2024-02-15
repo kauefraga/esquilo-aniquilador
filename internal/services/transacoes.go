@@ -1,8 +1,8 @@
 package services
 
 import (
+	"context"
 	"errors"
-	"time"
 
 	"github.com/kauefraga/esquilo-aniquilador/database"
 	"github.com/kauefraga/esquilo-aniquilador/internal/domain"
@@ -19,12 +19,6 @@ func CreateTransacao(
 	clienteId int,
 	transacao *domain.TransacaoRequest,
 ) (*domain.TransacaoResponse, error) {
-	// Verifica se o ID é de um cliente existente
-	cliente, ok := database.Clientes[clienteId] // in-memory
-	if !ok {
-		return nil, ErroClienteNaoExiste
-	}
-
 	// Verifica campos do request
 	if transacao.Valor <= 0 {
 		return nil, ErroValorDaTransacao
@@ -38,6 +32,29 @@ func CreateTransacao(
 		return nil, ErroDescricao
 	}
 
+	// Pega conexão com banco de dados
+	conn := database.GetConnection()
+	defer conn.Close()
+
+	// Verifica se o ID é de um cliente existente
+	var cliente domain.Cliente
+	err := conn.
+		QueryRow(
+			context.Background(),
+			"SELECT * FROM clientes WHERE id = $1",
+			clienteId,
+		).
+		Scan(
+			&cliente.ID,
+			&cliente.Nome,
+			&cliente.Limite,
+			&cliente.Saldo,
+		)
+
+	if err != nil {
+		return nil, err // Aqui é um erro no QueryRow, que pode ser um ErroClienteNaoExiste
+	}
+
 	// Verifica regra de negócio
 	// Regra de negócio - Uma transação de débito NUNCA pode deixar o saldo do cliente menor que seu limite disponível
 	// https://twitter.com/rkauefraga/status/1757524333629464861
@@ -45,19 +62,31 @@ func CreateTransacao(
 		return nil, ErroTransacaoDebito
 	}
 
-	// Para pegar o último elemento: `len(database.Transacoes)-1`.
-	// O seguinte seria `len(database.Transacoes)-1+1`
-	database.Transacoes[len(database.Transacoes)] = domain.Transacao{
-		ID:          len(database.Transacoes),
-		Valor:       transacao.Valor,
-		Tipo:        transacao.Tipo,
-		Descricao:   transacao.Descricao,
-		ClienteId:   cliente.ID,
-		RealizadaEm: time.Now(),
-	} // in-memory
+	_, err = conn.
+		Exec(
+			context.Background(),
+			"INSERT INTO transacoes (valor, tipo, descricao, cliente_id) VALUES ($1, $2, $3, $4)",
+			transacao.Valor,
+			transacao.Tipo,
+			transacao.Descricao,
+			cliente.ID,
+		)
+	if err != nil {
+		return nil, err
+	}
 
 	cliente.Saldo -= transacao.Valor
-	database.Clientes[cliente.ID] = cliente
+
+	_, err = conn.
+		Exec(
+			context.Background(),
+			"UPDATE clientes SET saldo = $1 WHERE id = $2",
+			cliente.Saldo,
+			cliente.ID,
+		)
+	if err != nil {
+		return nil, err
+	}
 
 	return &domain.TransacaoResponse{
 		Limite: cliente.Limite,

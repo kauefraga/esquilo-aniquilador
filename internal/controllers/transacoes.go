@@ -70,6 +70,10 @@ func Transacoes(c *fiber.Ctx) error {
 				"observacao": "Transações do tipo 'c' (crédito) ainda serão processadas.",
 			})
 		}
+
+		return c.Status(http.StatusInternalServerError).JSON(&fiber.Map{
+			"erro": err.Error(),
+		})
 	}
 
 	return c.JSON(transacaoResponse)
