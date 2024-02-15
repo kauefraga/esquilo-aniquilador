@@ -11,7 +11,7 @@ type Transacao struct {
 	RealizadaEm time.Time `json:"realizada_em"`
 }
 
-type TransacaoPayload struct {
+type TransacaoRequest struct {
 	Valor     int    `json:"valor"`
 	Tipo      string `json:"tipo"`
 	Descricao string `json:"descricao"`
