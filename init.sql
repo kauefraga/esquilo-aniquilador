@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS transacoes (
   tipo         CHAR(1) NOT NULL,
   descricao    VARCHAR(10) NOT NULL,
   cliente_id   INTEGER NOT NULL,
-  realizada_em TIMESTAMP NOT NULL
+  realizada_em TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
 INSERT INTO clientes (nome, limite)
