@@ -8,7 +8,6 @@ import (
 func main() {
 	app := fiber.New()
 
-	app.Get("/", controllers.Hello)
 	app.Get("/clientes/:id/extrato", controllers.Extrato)
 	app.Post("/clientes/:id/transacoes", controllers.Transacoes)
 

@@ -14,7 +14,6 @@
 
 Inicialmente:
 
-- [x] Rota `GET /`, Hello worldzinho 😃
 - [x] Rota `POST /clientes/:id/transacoes` com banco de dados em memória (para testes e validação das regras de negócio)
 - [x] Rota `GET /clientes/:id/extrato` com banco de dados em memória (só faltou fazer a ordenação decrescente por data/hora)
 
