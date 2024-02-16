@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/kauefraga/esquilo-aniquilador/database"
 	"github.com/kauefraga/esquilo-aniquilador/internal/domain"
 )
@@ -50,9 +51,12 @@ func CreateTransacao(
 			&cliente.Limite,
 			&cliente.Saldo,
 		)
-
 	if err != nil {
-		return nil, err // Aqui é um erro no QueryRow, que pode ser um ErroClienteNaoExiste
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, ErroClienteNaoExiste
+		}
+
+		return nil, err
 	}
 
 	// Verifica regra de negócio
