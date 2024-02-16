@@ -20,8 +20,8 @@ Inicialmente:
 
 Posteriormente/atualmente:
 
-- [ ] Rota `GET /clientes/:id/extrato` com banco de dados PostgreSQL
-- [ ] Rota `POST /clientes/:id/transacoes` com Postgres
+- [x] Rota `GET /clientes/:id/extrato` com banco de dados PostgreSQL
+- [x] Rota `POST /clientes/:id/transacoes` com Postgres
 
 ## ⬇ Como instalar e botar pra fu...ncionar
 
