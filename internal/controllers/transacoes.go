@@ -71,7 +71,7 @@ func Transacoes(c *fiber.Ctx) error {
 			})
 		}
 
-		return c.Status(http.StatusInternalServerError).JSON(&fiber.Map{
+		return c.Status(http.StatusBadRequest).JSON(&fiber.Map{
 			"erro": err.Error(),
 		})
 	}
