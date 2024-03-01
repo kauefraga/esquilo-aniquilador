@@ -1,6 +1,53 @@
 version: "3.5"
 
 services:
+  api01: &api
+    image: esquilo-aniquilador-api:latest
+    hostname: api01
+    environment:
+      - DB_HOST=db
+      - DB_USER=admin
+      - DB_PASSWORD=rinha
+      - DB_NAME=esquilo-aniquilador
+      - PORT=3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      - db
+    deploy:
+      resources:
+        limits:
+          cpus: "0.3"
+          memory: "50MB"
+
+  api02:
+    <<: *api
+    hostname: api02
+    environment:
+      - DB_HOST=db
+      - DB_USER=admin
+      - DB_PASSWORD=rinha
+      - DB_NAME=esquilo-aniquilador
+      - PORT=3002
+    ports:
+      - "3002:3002"
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - api01
+      - api02
+    ports:
+        # Obrigatório expor/usar a porta 9999 no load balancer!
+      - "9999:9999"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.4"
+          memory: "50MB"
+
   db:
     image: postgres:latest
     hostname: db
@@ -19,7 +66,7 @@ services:
           # aqui declarados é de 1.5 unidades de CPU e 550MB
           # de memória. A distribuição feita aqui é apenas
           # um exemplo – distribua como quiser.
-          cpus: "0.13"
+          cpus: "0.5"
           memory: "400MB"
 
 networks:
