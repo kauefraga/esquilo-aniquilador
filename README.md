@@ -91,6 +91,10 @@ Não tunei nada, mal implementei o necessário 🤣.
 - [Sobre a regra de negócio que retorna 422](https://twitter.com/rkauefraga/status/1757524333629464861)
 - [Sobre o README desse projeto](https://twitter.com/rkauefraga/status/1757606382570782877)
 - [Quando terminei a rota de extrato](https://twitter.com/rkauefraga/status/1757870172969246833)
+- [Começo do fim](https://twitter.com/rkauefraga/status/1766865225473524221)
+- [Fiz o teste passar 100% OK mas com uma latência miserável](https://twitter.com/rkauefraga/status/1766918566425612487)
+- [Quando terminei os testes com 100% OK e uma latência agradável](https://twitter.com/rkauefraga/status/1766939474020167970)
+- [Finalmente](https://twitter.com/rkauefraga/status/1766954158010052674)
 
 ## 📝 Licença
 
