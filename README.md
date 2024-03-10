@@ -24,6 +24,8 @@ Posteriormente/atualmente:
 
 A imagem do `Dockerfile` está disponível no Docker Hub: [kauefraga/esquilo-aniquilador-api](https://hub.docker.com/repository/docker/kauefraga/esquilo-aniquilador-api/general).
 
+Minha submissão para a Rinha de Backend está [aqui](https://github.com/zanfranceschi/rinha-de-backend-2024-q1/tree/main/participantes/kauefraga-golang).
+
 ## ⬇ Como instalar e botar pra fu...ncionar
 
 1. Clone o repositório
