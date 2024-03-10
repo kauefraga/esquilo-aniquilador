@@ -22,6 +22,8 @@ Posteriormente/atualmente:
 - [x] Rota `GET /clientes/:id/extrato` com banco de dados PostgreSQL
 - [x] Rota `POST /clientes/:id/transacoes` com Postgres
 
+A imagem do `Dockerfile` está disponível no Docker Hub: [kauefraga/esquilo-aniquilador-api](https://hub.docker.com/repository/docker/kauefraga/esquilo-aniquilador-api/general).
+
 ## ⬇ Como instalar e botar pra fu...ncionar
 
 1. Clone o repositório
@@ -45,11 +47,11 @@ go mod download
 
 ### Testes Gatling
 
-Ainda não testei.
+Dá uma olhada no [repositório principal](https://github.com/zanfranceschi/rinha-de-backend-2024-q1), meu mano! Especialmente [aqui](https://github.com/zanfranceschi/rinha-de-backend-2024-q1?tab=readme-ov-file#ferramenta-de-teste).
 
 ### Testes unitários
 
-Ainda não escrevi 🤡.
+Pra que isso?! 🤡
 
 ### Testes para verificar as regras de negócio (manual mesmo)
 
@@ -57,7 +59,8 @@ Requisitos: [Visual Studio Code](https://code.visualstudio.com).
 
 1. Instale a extensão [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)
 2. Abra o arquivo `requests.http`
-3. Clique em `Send Request`, faça isso para cada requisição descrita/que aparece
+3. Certifique-se de que o banco de dados e a API estejam rodando
+4. Clique em `Send Request`, faça isso para cada requisição descrita/que aparece
 
 ```bash
 # (1)
