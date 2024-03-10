@@ -1,4 +1,4 @@
-FROM golang:alpine AS build
+FROM golang:1.22-alpine AS build
 
 RUN apk update && apk add --no-cache git
 
@@ -7,7 +7,7 @@ COPY . .
 
 RUN go mod download
 
-RUN go build -ldflags=-w -o /bin/esquilo-aniquilador ./cmd/api/main.go
+RUN CGO_ENABLED=0 go build -ldflags=-w -o /bin/esquilo-aniquilador ./cmd/api/main.go
 
 FROM scratch AS production
 
