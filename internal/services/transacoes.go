@@ -47,17 +47,17 @@ func CreateTransacao(
 	}
 	defer tx.Rollback(context.Background())
 
-	// Verifica se o ID é de um cliente existente
-	var cliente domain.Cliente
+	var limite int
+	var saldo int
 	err = tx.
 		QueryRow(
 			context.Background(),
-			"SELECT limite, saldo FROM clientes WHERE id = $1",
+			"SELECT limite, saldo FROM clientes WHERE id = $1 FOR UPDATE",
 			clienteId,
 		).
 		Scan(
-			&cliente.Limite,
-			&cliente.Saldo,
+			&limite,
+			&saldo,
 		)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -70,15 +70,15 @@ func CreateTransacao(
 	var novo_saldo int
 
 	if transacao.Tipo == "d" {
-		novo_saldo = cliente.Saldo - transacao.Valor
+		novo_saldo = saldo - transacao.Valor
 	} else {
-		novo_saldo = cliente.Saldo + transacao.Valor
+		novo_saldo = saldo + transacao.Valor
 	}
 
 	// Verifica regra de negócio
 	// Regra de negócio - Uma transação de débito NUNCA pode deixar o saldo do cliente menor que seu limite disponível
 	// https://twitter.com/rkauefraga/status/1757524333629464861
-	if novo_saldo < cliente.Limite*-1 {
+	if novo_saldo < limite*-1 {
 		return nil, ErroTransacao
 	}
 
@@ -110,7 +110,7 @@ func CreateTransacao(
 	}
 
 	return &domain.TransacaoResponse{
-		Limite: cliente.Limite,
+		Limite: limite,
 		Saldo:  novo_saldo,
 	}, nil
 }
