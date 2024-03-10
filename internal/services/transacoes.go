@@ -33,13 +33,19 @@ func CreateTransacao(
 		return nil, ErroDescricao
 	}
 
-	// Pega conexão com banco de dados
-	conn := database.GetConnection()
-	defer conn.Close()
+	if database.Conn == nil {
+		database.GetConnection()
+	}
+
+	tx, err := database.Conn.Begin(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback(context.Background())
 
 	// Verifica se o ID é de um cliente existente
 	var cliente domain.Cliente
-	err := conn.
+	err = tx.
 		QueryRow(
 			context.Background(),
 			"SELECT * FROM clientes WHERE id = $1",
@@ -66,29 +72,35 @@ func CreateTransacao(
 		return nil, ErroTransacaoDebito
 	}
 
-	_, err = conn.
-		Exec(
-			context.Background(),
-			"INSERT INTO transacoes (valor, tipo, descricao, cliente_id) VALUES ($1, $2, $3, $4)",
-			transacao.Valor,
-			transacao.Tipo,
-			transacao.Descricao,
-			cliente.ID,
-		)
-	if err != nil {
-		return nil, err
-	}
-
 	cliente.Saldo -= transacao.Valor
 
-	_, err = conn.
-		Exec(
-			context.Background(),
-			"UPDATE clientes SET saldo = $1 WHERE id = $2",
-			cliente.Saldo,
-			cliente.ID,
-		)
+	batch := &pgx.Batch{}
+
+	batch.Queue(
+		"UPDATE clientes SET saldo = $1 WHERE id = $2",
+		cliente.Saldo,
+		cliente.ID,
+	)
+	batch.Queue(
+		"INSERT INTO transacoes (valor, tipo, descricao, cliente_id) VALUES ($1, $2, $3, $4)",
+		transacao.Valor,
+		transacao.Tipo,
+		transacao.Descricao,
+		cliente.ID,
+	)
+
+	s := tx.SendBatch(
+		context.Background(),
+		batch,
+	)
+	if err := s.Close(); err != nil {
+		return nil, err
+	}
+	err = tx.Commit(context.Background())
 	if err != nil {
+		if err.Error() == "no rows in result set" {
+			return nil, ErroClienteNaoExiste
+		}
 		return nil, err
 	}
 

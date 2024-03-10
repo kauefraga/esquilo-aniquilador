@@ -11,13 +11,14 @@ import (
 )
 
 func GetExtrato(clienteId int) (*domain.Extrato, error) {
-	// Pega conexão com banco de dados
-	conn := database.GetConnection()
-	defer conn.Close()
-
 	// Verifica se o ID é de um cliente existente e pega ele
 	var cliente domain.Cliente
-	err := conn.
+
+	if database.Conn == nil {
+		database.GetConnection()
+	}
+
+	err := database.Conn.
 		QueryRow(
 			context.Background(),
 			"SELECT * FROM clientes WHERE id = $1",
@@ -37,7 +38,7 @@ func GetExtrato(clienteId int) (*domain.Extrato, error) {
 		return nil, err
 	}
 
-	rows, err := conn.Query(
+	rows, err := database.Conn.Query(
 		context.Background(),
 		"SELECT valor, tipo, descricao, realizada_em FROM transacoes WHERE cliente_id = $1 ORDER BY realizada_em DESC LIMIT 10",
 		cliente.ID,

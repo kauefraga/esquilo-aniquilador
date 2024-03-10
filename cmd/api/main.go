@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/kauefraga/esquilo-aniquilador/database"
 	"github.com/kauefraga/esquilo-aniquilador/internal/controllers"
 )
 
@@ -17,4 +18,8 @@ func main() {
 	port := fmt.Sprintf(":%s", os.Getenv("PORT"))
 
 	app.Listen(port)
+
+	if database.Conn != nil {
+		database.Conn.Close()
+	}
 }

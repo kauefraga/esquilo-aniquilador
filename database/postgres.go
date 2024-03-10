@@ -8,9 +8,11 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
+var Conn *pgxpool.Pool
+
 // POR FAVOR, FECHA A CONEXÃO DEPOIS DE USAR OU METE `defer db.Close()`
-func GetConnection() *pgxpool.Pool {
-	conn := fmt.Sprintf(
+func GetConnection() {
+	connString := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s sslmode=disable",
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_USER"),
@@ -18,7 +20,7 @@ func GetConnection() *pgxpool.Pool {
 		os.Getenv("DB_NAME"),
 	)
 
-	config, err := pgxpool.ParseConfig(conn)
+	config, err := pgxpool.ParseConfig(connString)
 	if err != nil {
 		panic(err)
 	}
@@ -33,5 +35,7 @@ func GetConnection() *pgxpool.Pool {
 		panic(err)
 	}
 
-	return db
+	if Conn == nil {
+		Conn = db
+	}
 }
