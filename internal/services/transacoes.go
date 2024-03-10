@@ -71,9 +71,7 @@ func CreateTransacao(
 
 	if transacao.Tipo == "d" {
 		novo_saldo = cliente.Saldo - transacao.Valor
-	}
-
-	if transacao.Tipo == "c" {
+	} else {
 		novo_saldo = cliente.Saldo + transacao.Valor
 	}
 
