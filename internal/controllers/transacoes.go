@@ -47,27 +47,26 @@ func Transacoes(c *fiber.Ctx) error {
 		}
 
 		if errors.Is(err, services.ErroValorDaTransacao) {
-			return c.Status(http.StatusBadRequest).JSON(&fiber.Map{
+			return c.Status(http.StatusUnprocessableEntity).JSON(&fiber.Map{
 				"erro": "O valor da transação deve ser maior que zero.",
 			})
 		}
 
 		if errors.Is(err, services.ErroTipoDaTransacao) {
-			return c.Status(http.StatusBadRequest).JSON(&fiber.Map{
+			return c.Status(http.StatusUnprocessableEntity).JSON(&fiber.Map{
 				"erro": "A transação deve ser do tipo 'c' (crédito) ou 'd' (débito).",
 			})
 		}
 
 		if errors.Is(err, services.ErroDescricao) {
-			return c.Status(http.StatusBadRequest).JSON(&fiber.Map{
+			return c.Status(http.StatusUnprocessableEntity).JSON(&fiber.Map{
 				"erro": "A descrição deve ter de 1 a 10 caractéres.",
 			})
 		}
 
-		if errors.Is(err, services.ErroTransacaoDebito) {
+		if errors.Is(err, services.ErroTransacao) {
 			return c.Status(http.StatusUnprocessableEntity).JSON(&fiber.Map{
-				"erro":       "A transação do tipo 'd' (débito) nunca pode deixar o saldo do cliente menor que seu limite disponível.",
-				"observacao": "Transações do tipo 'c' (crédito) ainda serão processadas.",
+				"erro": "A transação do tipo 'd' (débito) nunca pode deixar o saldo do cliente menor que seu limite disponível.",
 			})
 		}
 
