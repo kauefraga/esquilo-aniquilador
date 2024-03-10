@@ -5,7 +5,7 @@
 ![GitHub's license](https://img.shields.io/github/license/kauefraga/esquilo-aniquilador)
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/kauefraga/esquilo-aniquilador/main)
 
-> 🐿 Minha API aniquiladora pra segunda edição da Rinha de Backend em Golang. A Rinha de Backend é uma competição muito divertida e, para mim, toda edição é/será de muito aprendizado. Participa aí!
+> 🐿 Minha API aniquiladora pra segunda edição da Rinha de Backend em Go. A Rinha de Backend é uma competição muito divertida e, para mim, toda edição é/será de muito aprendizado. Participa aí!
 
 > [!TIP]
 > Veja [o repositório da Rinha](https://github.com/zanfranceschi/rinha-de-backend-2024-q1). O prazo final é 10/03/2024.
@@ -48,6 +48,10 @@ go mod download
 ### Testes Gatling
 
 Dá uma olhada no [repositório principal](https://github.com/zanfranceschi/rinha-de-backend-2024-q1), meu mano! Especialmente [aqui](https://github.com/zanfranceschi/rinha-de-backend-2024-q1?tab=readme-ov-file#ferramenta-de-teste).
+
+Veja os resultados do último teste que rodei:
+
+![Resultados do teste de estresse](.github/resultado.png)
 
 ### Testes unitários
 
