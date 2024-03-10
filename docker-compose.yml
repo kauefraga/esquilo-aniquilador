@@ -2,7 +2,7 @@ version: "3.5"
 
 services:
   api01: &api
-    image: esquilo-aniquilador-api:latest
+    image: kauefraga/esquilo-aniquilador-api:latest
     hostname: api01
     environment:
       - DB_HOST=db
