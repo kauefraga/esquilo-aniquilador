@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS clientes (
   saldo  INTEGER NOT NULL DEFAULT 0
 );
 
-CREATE TABLE IF NOT EXISTS transacoes (
+CREATE UNLOGGED TABLE IF NOT EXISTS transacoes (
   id           SERIAL PRIMARY KEY,
   valor        INTEGER NOT NULL,
   tipo         CHAR(1) NOT NULL,
@@ -13,6 +13,13 @@ CREATE TABLE IF NOT EXISTS transacoes (
   cliente_id   INTEGER NOT NULL,
   realizada_em TIMESTAMP NOT NULL DEFAULT NOW()
 );
+
+ALTER TABLE
+  transacoes
+  SET
+    (autovacuum_enabled = false);
+
+CREATE INDEX idx_transacoes ON transacoes (cliente_id);
 
 INSERT INTO clientes (nome, limite)
 VALUES
