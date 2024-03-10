@@ -17,7 +17,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.3"
+          cpus: "0.37"
           memory: "50MB"
 
   api02:
@@ -45,8 +45,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "0.4"
-          memory: "50MB"
+          cpus: "0.2"
+          memory: "30MB"
 
   db:
     image: postgres:latest
@@ -66,8 +66,8 @@ services:
           # aqui declarados é de 1.5 unidades de CPU e 550MB
           # de memória. A distribuição feita aqui é apenas
           # um exemplo – distribua como quiser.
-          cpus: "0.5"
-          memory: "400MB"
+          cpus: "0.56"
+          memory: "420MB"
 
 networks:
   default:

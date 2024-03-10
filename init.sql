@@ -19,7 +19,7 @@ ALTER TABLE
   SET
     (autovacuum_enabled = false);
 
-CREATE INDEX idx_transacoes ON transacoes (cliente_id);
+CREATE INDEX IF NOT EXISTS idx_transacoes ON transacoes (cliente_id);
 
 INSERT INTO clientes (nome, limite)
 VALUES

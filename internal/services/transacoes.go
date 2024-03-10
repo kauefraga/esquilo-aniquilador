@@ -13,13 +13,17 @@ var ErroClienteNaoExiste = errors.New("cliente não existe")
 var ErroValorDaTransacao = errors.New("o valor da transação deve ser maior que zero")
 var ErroTipoDaTransacao = errors.New("a transação deve ser do tipo 'c' (crédito) ou 'd' (débito)")
 var ErroDescricao = errors.New("a descrição deve ter de 1 a 10 caractéres")
-var ErroTransacaoDebito = errors.New("a transação do tipo 'd' (débito) nunca pode deixar o saldo do cliente menor que seu limite disponível")
+var ErroTransacao = errors.New("a transação do tipo 'd' (débito) nunca pode deixar o saldo do cliente menor que seu limite disponível")
 
 // Service sem repository mesmo, só confia kkkkkk
 func CreateTransacao(
 	clienteId int,
 	transacao *domain.TransacaoRequest,
 ) (*domain.TransacaoResponse, error) {
+	if clienteId < 1 || clienteId > 5 {
+		return nil, ErroClienteNaoExiste
+	}
+
 	// Verifica campos do request
 	if transacao.Valor <= 0 {
 		return nil, ErroValorDaTransacao
@@ -48,12 +52,10 @@ func CreateTransacao(
 	err = tx.
 		QueryRow(
 			context.Background(),
-			"SELECT * FROM clientes WHERE id = $1",
+			"SELECT limite, saldo FROM clientes WHERE id = $1",
 			clienteId,
 		).
 		Scan(
-			&cliente.ID,
-			&cliente.Nome,
 			&cliente.Limite,
 			&cliente.Saldo,
 		)
@@ -65,47 +67,52 @@ func CreateTransacao(
 		return nil, err
 	}
 
+	var novo_saldo int
+
+	if transacao.Tipo == "d" {
+		novo_saldo = cliente.Saldo - transacao.Valor
+	}
+
+	if transacao.Tipo == "c" {
+		novo_saldo = cliente.Saldo + transacao.Valor
+	}
+
 	// Verifica regra de negócio
 	// Regra de negócio - Uma transação de débito NUNCA pode deixar o saldo do cliente menor que seu limite disponível
 	// https://twitter.com/rkauefraga/status/1757524333629464861
-	if transacao.Tipo == "d" && cliente.Saldo-transacao.Valor < -cliente.Limite {
-		return nil, ErroTransacaoDebito
+	if novo_saldo < cliente.Limite*-1 {
+		return nil, ErroTransacao
 	}
 
-	cliente.Saldo -= transacao.Valor
-
-	batch := &pgx.Batch{}
-
-	batch.Queue(
-		"UPDATE clientes SET saldo = $1 WHERE id = $2",
-		cliente.Saldo,
-		cliente.ID,
-	)
-	batch.Queue(
+	_, err = tx.Exec(
+		context.Background(),
 		"INSERT INTO transacoes (valor, tipo, descricao, cliente_id) VALUES ($1, $2, $3, $4)",
 		transacao.Valor,
 		transacao.Tipo,
 		transacao.Descricao,
-		cliente.ID,
+		clienteId,
 	)
-
-	s := tx.SendBatch(
-		context.Background(),
-		batch,
-	)
-	if err := s.Close(); err != nil {
+	if err != nil {
 		return nil, err
 	}
+
+	_, err = tx.Exec(
+		context.Background(),
+		"UPDATE clientes SET saldo = $1 WHERE id = $2",
+		novo_saldo,
+		clienteId,
+	)
+	if err != nil {
+		return nil, err
+	}
+
 	err = tx.Commit(context.Background())
 	if err != nil {
-		if err.Error() == "no rows in result set" {
-			return nil, ErroClienteNaoExiste
-		}
 		return nil, err
 	}
 
 	return &domain.TransacaoResponse{
 		Limite: cliente.Limite,
-		Saldo:  cliente.Saldo,
+		Saldo:  novo_saldo,
 	}, nil
 }

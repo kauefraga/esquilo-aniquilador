@@ -11,7 +11,10 @@ import (
 )
 
 func GetExtrato(clienteId int) (*domain.Extrato, error) {
-	// Verifica se o ID é de um cliente existente e pega ele
+	if clienteId < 1 || clienteId > 5 {
+		return nil, ErroClienteNaoExiste
+	}
+
 	var cliente domain.Cliente
 
 	if database.Conn == nil {
@@ -21,12 +24,10 @@ func GetExtrato(clienteId int) (*domain.Extrato, error) {
 	err := database.Conn.
 		QueryRow(
 			context.Background(),
-			"SELECT * FROM clientes WHERE id = $1",
+			"SELECT limite, saldo FROM clientes WHERE id = $1",
 			clienteId,
 		).
 		Scan(
-			&cliente.ID,
-			&cliente.Nome,
 			&cliente.Limite,
 			&cliente.Saldo,
 		)
@@ -41,7 +42,7 @@ func GetExtrato(clienteId int) (*domain.Extrato, error) {
 	rows, err := database.Conn.Query(
 		context.Background(),
 		"SELECT valor, tipo, descricao, realizada_em FROM transacoes WHERE cliente_id = $1 ORDER BY realizada_em DESC LIMIT 10",
-		cliente.ID,
+		clienteId,
 	)
 	if err != nil {
 		return nil, err
