@@ -27,7 +27,7 @@ A imagem do `Dockerfile` está disponível no Docker Hub: [kauefraga/esquilo-ani
 Minha submissão para a Rinha de Backend está [aqui](https://github.com/zanfranceschi/rinha-de-backend-2024-q1/tree/main/participantes/kauefraga-golang).
 
 > [!IMPORTANT]
-> Uma pessoa muito importante na conclusão desse projeto foi o Shwuy (@sxhk0), que me ajudou a chegar no 100% OK e me acompanhou no processo!
+> Uma pessoa muito importante na conclusão desse projeto foi o Shwuy ([@sxhk0](https://github.com/sxhk0)), que me ajudou a chegar no 100% OK e me acompanhou no processo!
 
 ## ⬇ Como instalar e botar pra fu...ncionar
 
